@@ -16,17 +16,26 @@ import { BillingContext } from "../utils/BillingContext";
 import { formatToCurrency, parseCurrencyToNumber } from "../utils/helpers";
 
 function Billing(props) {
-
   const [billing, setBilling] = useContext(BillingContext);
-  
-//const formatToCurrency = (val) => `$` + val
+  const updateRate = (val) => {
+    setBilling(parseCurrencyToNumber(val));
+    localStorage.setItem('billingRate', parseCurrencyToNumber(val))
+  };
+  //const formatToCurrency = (val) => `$` + val
 
   return (
-    <Grid templateColumns="repeat(3, 1fr)" gap={6} p={0}>
+    <Grid templateColumns="repeat(2, 1fr)" gap={6} py={1} my={4} bg="whiteAlpha.300" borderRadius='md'  >
+      <GridItem p={4}>
+          <FormLabel htmlFor="Set Your Billing Rate">Billing Rate</FormLabel>
+      </GridItem>
       <GridItem p={4}>
         <FormControl>
-          <VisuallyHidden><FormLabel htmlFor="Billing Rate">£P/H</FormLabel></VisuallyHidden>
-          <NumberInput value={formatToCurrency(parseCurrencyToNumber(billing))} precision={2} step={0.5} onChange={(valueString) => setBilling(parseCurrencyToNumber(valueString))}>
+          <NumberInput
+            value={formatToCurrency(parseCurrencyToNumber(billing))}
+            precision={2}
+            step={0.5}
+            onChange={(valueString) => updateRate(valueString)}
+          >
             <NumberInputField />
             <NumberInputStepper>
               <NumberIncrementStepper />

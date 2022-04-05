@@ -15,6 +15,7 @@
     "framer-motion": "^6.2.8",
     "moment": "^2.29.2",
     "next": "12.1.4",
+    "numeral": "^2.0.6",
     "react": "18.0.0",
     "react-dom": "18.0.0"
   },
