@@ -6,7 +6,7 @@ import { formatToCurrency } from "../utils/helpers";
 
 function MyApp({ Component, pageProps }) {
   
-  const [billing, setBilling] = useState('0');
+  const [billing, setBilling] = useState('100');
 
   useEffect(() => {
     // once we've hydrated on the client w/ the initial

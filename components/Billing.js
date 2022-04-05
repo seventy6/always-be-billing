@@ -33,7 +33,7 @@ function Billing(props) {
           <NumberInput
             value={formatToCurrency(parseCurrencyToNumber(billing))}
             precision={2}
-            step={0.5}
+            step={10.0}
             onChange={(valueString) => updateRate(valueString)}
           >
             <NumberInputField />
