@@ -17,7 +17,8 @@
     "next": "12.1.4",
     "numeral": "^2.0.6",
     "react": "18.0.0",
-    "react-dom": "18.0.0"
+    "react-dom": "18.0.0",
+    "underscore": "^1.13.2"
   },
   "devDependencies": {
     "eslint": "8.12.0",

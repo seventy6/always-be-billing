@@ -12,6 +12,7 @@ import {
 import moment from "moment";
 import { BillingContext } from "../utils/BillingContext";
 import { formatToCurrency } from "../utils/helpers";
+import _, { map } from "underscore";
 
 function Cards(props) {
   const endOfMonth = moment().endOf("month");
@@ -64,6 +65,14 @@ function Cards(props) {
     });
   }
 
+  const remaingMonthsBilling = _.reduce(
+    remaingMonthsData,
+    function (memoizer, value) {
+      return memoizer + value.remainingWorkDays;
+    },
+    0
+  );
+
   return (
     <>
       <Heading as="h2" size="lg">
@@ -80,20 +89,14 @@ function Cards(props) {
           <Stat>
             <StatLabel>Days Remaing in {moment().format("MMMM")}</StatLabel>
             <StatNumber>{remainingDays}</StatNumber>
-            <StatHelpText>
-              {moment().format("DD-MM-YYYY")} -{" "}
-              {endOfMonth.format("DD-MM-YYYY")}
-            </StatHelpText>
+            <StatHelpText></StatHelpText>
           </Stat>
         </GridItem>
         <GridItem bg="gray.100" p={4} borderRadius="md">
           <Stat>
             <StatLabel>Work days in {moment().format("MMMM")}</StatLabel>
             <StatNumber>{remainingWorkDays}</StatNumber>
-            <StatHelpText>
-              {moment().format("DD-MM-YYYY")} -{" "}
-              {endOfMonth.format("DD-MM-YYYY")}
-            </StatHelpText>
+            <StatHelpText></StatHelpText>
           </Stat>
         </GridItem>
         <GridItem bg="gray.100" p={4} borderRadius="md">
@@ -104,21 +107,16 @@ function Cards(props) {
             <StatNumber>
               {formatToCurrency(billing * 7.5 * remainingWorkDays)}
             </StatNumber>
-            <StatHelpText>
-              {moment().format("DD-MM-YYYY")} -{" "}
-              {endOfMonth.format("DD-MM-YYYY")}
-            </StatHelpText>
+            <StatHelpText></StatHelpText>
           </Stat>
         </GridItem>
       </Grid>
-      <Heading as="h1" size="lg" py={2}>
-        <Text
-          bgGradient="linear(to-l, #7928CA, #FF0080)"
-          bgClip="text"
-          fontWeight="extrabold"
-        >
-          Remaining {monthsRemaining} months for {moment().format("YYYY")}
-        </Text>
+      <Heading as="h1" size="lg" py={2} px={20}>
+        If you worked {remaingMonthsBilling} days in the remaining{" "}
+        {monthsRemaining} months of {moment().format("YYYY")}, you have the potential to
+        earn <span bg="pink.100" fontWeight="extrabold">
+           {formatToCurrency(remaingMonthsBilling * 7.5 * billing)} before tax
+        </span>
       </Heading>
       <Grid templateColumns="repeat(3, 1fr)" gap={6} p={14}>
         {remaingMonthsData.map((month) => (

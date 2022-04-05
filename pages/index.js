@@ -29,7 +29,7 @@ export default function Home() {
             fontSize="6xl"
             fontWeight="extrabold"
           >
-            Always be billing!
+            Always be billing...
           </Text>
         </Heading>
         <Billing />
