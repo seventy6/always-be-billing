@@ -3,7 +3,6 @@ import { Grid, GridItem } from "@chakra-ui/react";
 import {
   FormControl,
   FormLabel,
-  VisuallyHidden,
   FormHelperText,
   NumberInput,
   NumberInputField,
@@ -13,28 +12,105 @@ import {
 } from "@chakra-ui/react";
 
 import { BillingContext } from "../utils/BillingContext";
-import { formatToCurrency, parseCurrencyToNumber } from "../utils/helpers";
+import {
+  formatToCurrency,
+  parseCurrencyToNumber,
+  formatToPercent,
+  parsePercentToNumber,
+} from "../utils/helpers";
 
 function Billing(props) {
   const [billing, setBilling] = useContext(BillingContext);
+  console.log("billing.js > ", billing);
+
   const updateRate = (val) => {
-    setBilling(parseCurrencyToNumber(val));
-    localStorage.setItem('billingRate', parseCurrencyToNumber(val))
+    setBilling({
+      billingRate: parseCurrencyToNumber(val),
+      billingHoursPerDay: billing.billingHoursPerDay,
+      taxRate: billing.taxRate,
+    });
+    localStorage.setItem("billingRate", parseCurrencyToNumber(val));
+  };
+  const updateHours = (val) => {
+    setBilling({
+      billingHoursPerDay: val,
+      billingRate: billing.billingRate,
+      taxRate: billing.taxRate,
+    });
+    localStorage.setItem("billingHoursPerDay", parseCurrencyToNumber(val));
+  };
+  const updateTax = (val) => {
+    const newVal = parsePercentToNumber(val) / 100;
+    console.log(val, newVal);
+    setBilling({
+      billingHoursPerDay: billing.billingHoursPerDay,
+      billingRate: billing.billingRate,
+      taxRate: newVal,
+    });
+    localStorage.setItem("taxRate", newVal);
   };
   //const formatToCurrency = (val) => `$` + val
 
   return (
-    <Grid templateColumns="repeat(2, 1fr)" gap={6} py={1} my={4} bg="whiteAlpha.300" borderRadius='md'  >
+    <Grid
+      templateColumns="repeat(2, 1fr)"
+      gap={6}
+      py={1}
+      my={4}
+      bg="whiteAlpha.300"
+      borderRadius="md"
+    >
       <GridItem p={4}>
-          <FormLabel htmlFor="Set Your Billing Rate">Billing Rate</FormLabel>
+        <FormLabel htmlFor="Set Your Billing Rate">Billing Rate</FormLabel>
       </GridItem>
       <GridItem p={4}>
         <FormControl>
           <NumberInput
-            value={formatToCurrency(parseCurrencyToNumber(billing))}
-            precision={2}
-            step={10.0}
+            value={formatToCurrency(billing.billingRate)}
+            precision={0}
+            step={5.0}
             onChange={(valueString) => updateRate(valueString)}
+          >
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+          <FormHelperText></FormHelperText>
+        </FormControl>
+      </GridItem>
+      <GridItem px={4}>
+        <FormLabel htmlFor="Hours per Day">Hours Per Day</FormLabel>
+      </GridItem>
+      <GridItem px={4}>
+        <FormControl>
+          <NumberInput
+            value={billing.billingHoursPerDay}
+            precision={1}
+            step={1}
+            onChange={(valueString) => updateHours(valueString)}
+          >
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+          <FormHelperText></FormHelperText>
+        </FormControl>
+      </GridItem>
+      <GridItem p={4}>
+        <FormLabel htmlFor="Set Your Tax Rate">Tax Rate</FormLabel>
+      </GridItem>
+      <GridItem px={4}>
+        <FormControl>
+          <NumberInput
+            value={formatToPercent(billing.taxRate)}
+            precision={1}
+            onChange={(valueString) => updateTax(valueString)}
+            max={100}
+            min={1}
           >
             <NumberInputField />
             <NumberInputStepper>

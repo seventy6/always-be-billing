@@ -8,6 +8,7 @@ import {
   StatHelpText,
   Text,
   Heading,
+  Flex,
 } from "@chakra-ui/react";
 import moment from "moment";
 import { BillingContext } from "../utils/BillingContext";
@@ -84,7 +85,7 @@ function Cards(props) {
           {endOfMonth.format("MMMM")} numbers
         </Text>
       </Heading>
-      <Grid templateColumns="repeat(3, 1fr)" gap={6} p={14}>
+      <Grid templateColumns="repeat(3, 1fr)" gap={6} py={4} px={14}>
         <GridItem bg="gray.100" p={4} borderRadius="md">
           <Stat>
             <StatLabel>Days Remaing in {moment().format("MMMM")}</StatLabel>
@@ -101,23 +102,74 @@ function Cards(props) {
         </GridItem>
         <GridItem bg="gray.100" p={4} borderRadius="md">
           <Stat>
-            <StatLabel>
-              Potential billing in {moment().format("MMMM")}
-            </StatLabel>
+            <StatLabel>After tax</StatLabel>
             <StatNumber>
-              {formatToCurrency(billing * 7.5 * remainingWorkDays)}
+              {formatToCurrency(
+                billing.billingRate *
+                  billing.billingHoursPerDay *
+                  remainingWorkDays -
+                  billing.billingRate *
+                    billing.billingHoursPerDay *
+                    remainingWorkDays *
+                    billing.taxRate
+              )}
             </StatNumber>
-            <StatHelpText></StatHelpText>
+            <StatHelpText>
+              Before Tax:{" "}
+              {formatToCurrency(
+                billing.billingRate *
+                  billing.billingHoursPerDay *
+                  remainingWorkDays
+              )}
+            </StatHelpText>
           </Stat>
         </GridItem>
       </Grid>
-      <Heading as="h1" size="lg" py={2} px={20}>
-        If you worked {remaingMonthsBilling} days in the remaining{" "}
-        {monthsRemaining} months of {moment().format("YYYY")}, you have the potential to
-        earn <span bg="pink.100" fontWeight="extrabold">
-           {formatToCurrency(remaingMonthsBilling * 7.5 * billing)} before tax
-        </span>
-      </Heading>
+      <Flex gap={6} py={8} px={14} w={["100%", 900, 900]}>
+        <Heading
+          align="center"
+          as="h1"
+          size="lg"
+          py={2}
+          px={0}
+          color="gray.600"
+        >
+          <Text as="span">
+            If you continue to work at the same pace for the remaining{" "}
+          </Text>
+          <Text as="span" color="blue.300">
+            {monthsRemaining}
+          </Text>
+          <Text as="span"> months (</Text>
+          <Text as="span" color="blue.300">
+            {remaingMonthsBilling} days
+          </Text>
+          <Text as="span">) in </Text>
+          <Text as="span" color="blue.300">
+            {moment().format("YYYY")}
+          </Text>
+          <Text as="span">
+            ,<br /> you have the potential to earn{" "}
+          </Text>
+          <Text
+            as="span"
+            bgGradient="linear(to-r, #7928CA, #FF0080)"
+            bgClip="text"
+            fontWeight="extrabold"
+          >
+            {formatToCurrency(
+              remaingMonthsBilling *
+                billing.billingHoursPerDay *
+                billing.billingRate -
+                remaingMonthsBilling *
+                  billing.billingHoursPerDay *
+                  billing.billingRate *
+                  billing.taxRate
+            )}{" "}
+          </Text>
+          <Text as="span">after tax 😀</Text>
+        </Heading>
+      </Flex>
       <Grid templateColumns="repeat(3, 1fr)" gap={6} p={14}>
         {remaingMonthsData.map((month) => (
           <>
@@ -128,9 +180,27 @@ function Cards(props) {
               <Stat>
                 <StatNumber>{month.remainingWorkDays} billable days</StatNumber>
                 <StatNumber>
-                  {formatToCurrency(billing * 7.5 * month.remainingWorkDays)}
+                  <Text fontSize="sm" as="span">
+                    After tax:
+                  </Text>
+                  {formatToCurrency(
+                    billing.billingRate *
+                      billing.billingHoursPerDay *
+                      month.remainingWorkDays -
+                      billing.billingRate *
+                        billing.billingHoursPerDay *
+                        month.remainingWorkDays *
+                        billing.taxRate
+                  )}
                 </StatNumber>
-                <StatHelpText></StatHelpText>
+                <StatHelpText>
+                  Before Tax:{" "}
+                  {formatToCurrency(
+                    billing.billingRate *
+                      billing.billingHoursPerDay *
+                      month.remainingWorkDays
+                  )}
+                </StatHelpText>
               </Stat>
             </GridItem>
           </>
