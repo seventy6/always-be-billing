@@ -5,5 +5,6 @@ export const BillingContext = createContext({
     billingRate: "$100",
     billingHoursPerDay: "7.5",
     taxRate: "40%",
+    currency: "USD",
   },
 });

@@ -82,28 +82,30 @@ function Cards(props) {
           bgClip="text"
           fontWeight="extrabold"
         >
-          {endOfMonth.format("MMMM")} numbers
-        </Text>
-      </Heading>
+          {endOfMonth.format("MMMM")}
+          numbers{" "}
+        </Text>{" "}
+      </Heading>{" "}
       <Grid templateColumns="repeat(3, 1fr)" gap={6} py={4} px={14}>
         <GridItem bg="gray.100" p={4} borderRadius="md">
           <Stat>
-            <StatLabel>Days Remaing in {moment().format("MMMM")}</StatLabel>
-            <StatNumber>{remainingDays}</StatNumber>
-            <StatHelpText></StatHelpText>
-          </Stat>
-        </GridItem>
+            <StatLabel> Days Remaing in {moment().format("MMMM")} </StatLabel>{" "}
+            <StatNumber> {remainingDays} </StatNumber>{" "}
+            <StatHelpText> </StatHelpText>{" "}
+          </Stat>{" "}
+        </GridItem>{" "}
         <GridItem bg="gray.100" p={4} borderRadius="md">
           <Stat>
-            <StatLabel>Work days in {moment().format("MMMM")}</StatLabel>
-            <StatNumber>{remainingWorkDays}</StatNumber>
-            <StatHelpText></StatHelpText>
-          </Stat>
-        </GridItem>
+            <StatLabel> Work days in {moment().format("MMMM")} </StatLabel>{" "}
+            <StatNumber> {remainingWorkDays} </StatNumber>{" "}
+            <StatHelpText> </StatHelpText>{" "}
+          </Stat>{" "}
+        </GridItem>{" "}
         <GridItem bg="gray.100" p={4} borderRadius="md">
           <Stat>
-            <StatLabel>After tax</StatLabel>
+            <StatLabel> After tax </StatLabel>{" "}
             <StatNumber>
+              {" "}
               {formatToCurrency(
                 billing.billingRate *
                   billing.billingHoursPerDay *
@@ -112,19 +114,19 @@ function Cards(props) {
                     billing.billingHoursPerDay *
                     remainingWorkDays *
                     billing.taxRate
-              )}
-            </StatNumber>
+              )}{" "}
+            </StatNumber>{" "}
             <StatHelpText>
               Before Tax:{" "}
               {formatToCurrency(
                 billing.billingRate *
                   billing.billingHoursPerDay *
                   remainingWorkDays
-              )}
-            </StatHelpText>
-          </Stat>
-        </GridItem>
-      </Grid>
+              )}{" "}
+            </StatHelpText>{" "}
+          </Stat>{" "}
+        </GridItem>{" "}
+      </Grid>{" "}
       <Flex gap={6} py={8} px={14} w={["100%", 900, 900]}>
         <Heading
           align="center"
@@ -136,21 +138,26 @@ function Cards(props) {
         >
           <Text as="span">
             If you continue to work at the same pace for the remaining{" "}
-          </Text>
+          </Text>{" "}
           <Text as="span" color="blue.300">
-            {monthsRemaining}
-          </Text>
-          <Text as="span"> months (</Text>
+            {" "}
+            {monthsRemaining}{" "}
+          </Text>{" "}
+          <Text as="span"> months( </Text>{" "}
           <Text as="span" color="blue.300">
-            {remaingMonthsBilling} days
-          </Text>
-          <Text as="span">) in </Text>
+            {" "}
+            {remaingMonthsBilling}
+            days{" "}
+          </Text>{" "}
+          <Text as="span"> ) in </Text>{" "}
           <Text as="span" color="blue.300">
-            {moment().format("YYYY")}
-          </Text>
+            {" "}
+            {moment().format("YYYY")}{" "}
+          </Text>{" "}
           <Text as="span">
-            ,<br /> you have the potential to earn{" "}
-          </Text>
+            {" "}
+            , <br /> you have the potential to earn{" "}
+          </Text>{" "}
           <Text
             as="span"
             bgGradient="linear(to-r, #7928CA, #FF0080)"
@@ -166,23 +173,35 @@ function Cards(props) {
                   billing.billingRate *
                   billing.taxRate
             )}{" "}
-          </Text>
-          <Text as="span">after tax 😀</Text>
-        </Heading>
-      </Flex>
+          </Text>{" "}
+          <Text as="span"> after tax😀 </Text>{" "}
+        </Heading>{" "}
+      </Flex>{" "}
       <Grid templateColumns="repeat(3, 1fr)" gap={6} p={14}>
+        {" "}
         {remaingMonthsData.map((month) => (
           <>
-            <GridItem bg="pink.100" p={4} borderRadius="md" bg="green.100">
+            <GridItem
+              bg="pink.100"
+              p={4}
+              borderRadius="md"
+              bg="green.100"
+              key={month.month + Math.random()}
+            >
               <Heading as="h2" size="lg">
-                {month.month}
-              </Heading>
+                {" "}
+                {month.month}{" "}
+              </Heading>{" "}
               <Stat>
-                <StatNumber>{month.remainingWorkDays} billable days</StatNumber>
+                <StatNumber>
+                  {" "}
+                  {month.remainingWorkDays}
+                  billable days{" "}
+                </StatNumber>{" "}
                 <StatNumber>
                   <Text fontSize="sm" as="span">
                     After tax:
-                  </Text>
+                  </Text>{" "}
                   {formatToCurrency(
                     billing.billingRate *
                       billing.billingHoursPerDay *
@@ -191,21 +210,21 @@ function Cards(props) {
                         billing.billingHoursPerDay *
                         month.remainingWorkDays *
                         billing.taxRate
-                  )}
-                </StatNumber>
+                  )}{" "}
+                </StatNumber>{" "}
                 <StatHelpText>
                   Before Tax:{" "}
                   {formatToCurrency(
                     billing.billingRate *
                       billing.billingHoursPerDay *
                       month.remainingWorkDays
-                  )}
-                </StatHelpText>
-              </Stat>
-            </GridItem>
+                  )}{" "}
+                </StatHelpText>{" "}
+              </Stat>{" "}
+            </GridItem>{" "}
           </>
-        ))}
-      </Grid>
+        ))}{" "}
+      </Grid>{" "}
     </>
   );
 }

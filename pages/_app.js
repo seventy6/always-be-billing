@@ -8,11 +8,12 @@ function MyApp({ Component, pageProps }) {
     billingRate: 100,
     billingHoursPerDay: 7.5,
     taxRate: 0.4,
+    currency: "USD",
   });
 
-  console.log("app.js > ", billing);
-
+  const [storageChanged, setStorageChanged] = useState(false);
   useEffect(() => {
+    if (storageChanged) return;
     // once we've hydrated on the client w/ the initial
     // render, check to see if we have a value stored
     // in `localStorage`. if so, update `value`. this
@@ -23,6 +24,7 @@ function MyApp({ Component, pageProps }) {
     const billingRate = localStorage.getItem("billingRate");
     const billingHoursPerDay = localStorage.getItem("billingHoursPerDay");
     const taxRate = localStorage.getItem("taxRate");
+    const currency = localStorage.getItem("currency");
 
     setBilling({
       billingRate: billingRate ? billingRate : billing.billingRate,
@@ -30,16 +32,16 @@ function MyApp({ Component, pageProps }) {
         ? billingHoursPerDay
         : billing.billingHoursPerDay,
       taxRate: taxRate ? taxRate : billing.taxRate,
+      currency: currency ? currency : billing.currency,
     });
-
-    console.log("app.js > useeffect > ", billing);
-  }, []);
-
+    if (!storageChanged) setStorageChanged(true);
+  }, [billing]);
+  if (!storageChanged) return <></>;
   return (
     <ChakraProvider>
       <BillingContext.Provider value={[billing, setBilling]}>
-        <Component {...pageProps} />
-      </BillingContext.Provider>
+        <Component {...pageProps} />{" "}
+      </BillingContext.Provider>{" "}
     </ChakraProvider>
   );
 }

@@ -7,12 +7,7 @@ import Cards from "../components/Cards";
 import Billing from "../components/Billing";
 import { Heading, Box, Text } from "@chakra-ui/react";
 
-import { BillingContext } from "../utils/BillingContext";
-import { formatToCurrency } from "../utils/helpers";
-
-export default function Home() {
-  const [billing] = useContext(BillingContext);
-
+export default function Home(props) {
   return (
     <Box className={styles.container} bg={"whiteAlpha.100"}>
       <Head>
@@ -38,7 +33,7 @@ export default function Home() {
             Always be billing...
           </Text>
         </Heading>
-        <Billing />
+        <Billing currencyObject={props.currencyObject} />
         <Cards></Cards>
       </main>
 
@@ -53,4 +48,14 @@ export default function Home() {
       </footer>
     </Box>
   );
+}
+
+import { currencyObject } from "../data/currencies";
+
+export async function getStaticProps() {
+  return {
+    props: {
+      currencyObject,
+    },
+  };
 }
