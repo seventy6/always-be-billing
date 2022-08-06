@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import "../styles/globals.css";
-import { ChakraProvider } from "@chakra-ui/react";
+//import "../styles/globals.css";
+import { ChakraProvider, Container, Flex } from "@chakra-ui/react";
 import { BillingContext } from "../utils/BillingContext";
+import { Header } from "../components/Header";
 
 function MyApp({ Component, pageProps }) {
   const [billing, setBilling] = useState({
@@ -40,7 +41,22 @@ function MyApp({ Component, pageProps }) {
   return (
     <ChakraProvider>
       <BillingContext.Provider value={[billing, setBilling]}>
-        <Component {...pageProps} />{" "}
+        <Header />
+        <Container
+          minWidth={["max-width", "container.lg"]}
+          px={[2, 20]}
+          py={[2, 10]}
+          alignItems="center"
+          alignContent="center"
+        >
+          <Flex
+            minW={"100%"}
+            p={[0, 5, 10]}
+            direction={{ base: "column-reverse", md: "row" }}
+          >
+            <Component {...pageProps} />{" "}
+          </Flex>
+        </Container>
       </BillingContext.Provider>{" "}
     </ChakraProvider>
   );

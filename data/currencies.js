@@ -1154,10 +1154,14 @@ export const currencyObject = [
   },
 ];
 
-export const getCurrencyFromCode = (val) => {
+export const getCurrencySelectorFromCode = (val) => {
   const _obj = currencies.find((index) => index.code === val);
   return {
     value: _obj.code,
     label: _obj.emoji + " " + _obj.code + " – " + _obj.name,
   };
+};
+export const getCurrencyFromCode = (val) => {
+  const _obj = currencies.find((index) => index.code === val);
+  return _obj.code;
 };

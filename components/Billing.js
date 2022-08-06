@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import { Grid, GridItem } from "@chakra-ui/react";
 import {
   FormControl,
   FormLabel,
@@ -10,6 +9,9 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   Text,
+  useBreakpointValue,
+  SimpleGrid,
+  GridItem,
 } from "@chakra-ui/react";
 
 import { BillingContext } from "../utils/BillingContext";
@@ -21,12 +23,16 @@ import {
 } from "../utils/helpers";
 
 import CurrencySelector from "./CurrencySelector";
-import { getCurrencyFromCode } from "../data/currencies";
+import {
+  getCurrencySelectorFromCode,
+  getCurrencyFromCode,
+} from "../data/currencies";
 
 function Billing(props) {
+  const columns = useBreakpointValue({ base: 1, md: 2 });
   const [billing, setBilling] = useContext(BillingContext);
   const [selectedCurrency, setSelectedCurrency] = useState(
-    getCurrencyFromCode(billing.currency)
+    getCurrencySelectorFromCode(billing.currency)
   );
 
   console.log("billing.js > ", billing, selectedCurrency);
@@ -70,19 +76,12 @@ function Billing(props) {
       currency: val.value,
     });
     localStorage.setItem("currency", val.value);
-    setSelectedCurrency(getCurrencyFromCode(val.value));
+    setSelectedCurrency(getCurrencySelectorFromCode(val.value));
   };
   //const formatToCurrency = (val) => `$` + val
 
   return (
-    <Grid
-      templateColumns="repeat(2, 1fr)"
-      gap={2}
-      py={1}
-      my={0}
-      bg="whiteAlpha.300"
-      borderRadius="md"
-    >
+    <SimpleGrid columns={columns} gap={6} px={1}>
       <GridItem p={4}>
         <FormLabel htmlFor="Set Your Billing Rate">
           Billing Rate <br />
@@ -95,7 +94,10 @@ function Billing(props) {
       <GridItem p={4}>
         <FormControl>
           <NumberInput
-            value={formatToCurrency(billing.billingRate)}
+            value={formatToCurrency(
+              billing.billingRate,
+              getCurrencyFromCode(billing.currency)
+            )}
             precision={0}
             step={5.0}
             onChange={(valueString) => updateRate(valueString)}
@@ -104,14 +106,14 @@ function Billing(props) {
             <NumberInputStepper>
               <NumberIncrementStepper />
               <NumberDecrementStepper />
-            </NumberInputStepper>{" "}
-          </NumberInput>{" "}
-          <FormHelperText> </FormHelperText>{" "}
-        </FormControl>{" "}
-      </GridItem>{" "}
+            </NumberInputStepper>
+          </NumberInput>
+          <FormHelperText></FormHelperText>
+        </FormControl>
+      </GridItem>
       <GridItem px={4}>
-        <FormLabel htmlFor="Hours per Day"> Hours Per Day </FormLabel>{" "}
-      </GridItem>{" "}
+        <FormLabel htmlFor="Hours per Day"> Hours Per Day </FormLabel>
+      </GridItem>
       <GridItem px={4}>
         <FormControl>
           <NumberInput
@@ -124,14 +126,14 @@ function Billing(props) {
             <NumberInputStepper>
               <NumberIncrementStepper />
               <NumberDecrementStepper />
-            </NumberInputStepper>{" "}
-          </NumberInput>{" "}
-          <FormHelperText> </FormHelperText>{" "}
-        </FormControl>{" "}
-      </GridItem>{" "}
+            </NumberInputStepper>
+          </NumberInput>
+          <FormHelperText> </FormHelperText>
+        </FormControl>
+      </GridItem>
       <GridItem p={4}>
-        <FormLabel htmlFor="Set Your Tax Rate"> Tax Rate </FormLabel>{" "}
-      </GridItem>{" "}
+        <FormLabel htmlFor="Set Your Tax Rate"> Tax Rate </FormLabel>
+      </GridItem>
       <GridItem px={4}>
         <FormControl>
           <NumberInput
@@ -145,14 +147,14 @@ function Billing(props) {
             <NumberInputStepper>
               <NumberIncrementStepper />
               <NumberDecrementStepper />
-            </NumberInputStepper>{" "}
-          </NumberInput>{" "}
-          <FormHelperText> </FormHelperText>{" "}
-        </FormControl>{" "}
-      </GridItem>{" "}
+            </NumberInputStepper>
+          </NumberInput>
+          <FormHelperText> </FormHelperText>
+        </FormControl>
+      </GridItem>
       <GridItem p={4}>
-        <FormLabel htmlFor="Set Your Tax Rate"> Currency </FormLabel>{" "}
-      </GridItem>{" "}
+        <FormLabel htmlFor="Set Your Tax Rate"> Currency </FormLabel>
+      </GridItem>
       <GridItem px={4}>
         <FormControl>
           <CurrencySelector
@@ -160,10 +162,10 @@ function Billing(props) {
             onChange={updateCurrency}
             selectedItem={selectedCurrency}
           />
-          <FormHelperText> </FormHelperText>{" "}
-        </FormControl>{" "}
-      </GridItem>{" "}
-    </Grid>
+          <FormHelperText> </FormHelperText>
+        </FormControl>
+      </GridItem>
+    </SimpleGrid>
   );
 }
 

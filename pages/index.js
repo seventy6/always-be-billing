@@ -9,47 +9,21 @@ import { Heading, Box, Text, VStack } from "@chakra-ui/react";
 
 export default function Home(props) {
   return (
-    <Box className={styles.container} bg={"whiteAlpha.100"}>
-      <Head>
-        <title>
-          All ways be billing... - the simple tool for predicting this year's
-          potential revenue
-        </title>
-        <meta
-          name="description"
-          content="A simple tool for predicting your revenue potential as a freelancer"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <VStack spacing={5}>
-          <Heading as="h2" size="xl">
-            <Text
-              // bgGradient="linear(to-l, #7928CA, #FF0080)"
-              // bgClip="text"
-              fontSize="6xl"
-              fontWeight="extrabold"
-              color="gray.700"
-            >
-              Always be billing...
-            </Text>
-          </Heading>
-          <Billing currencyObject={props.currencyObject} />
-          <Cards></Cards>
-        </VStack>
-      </main>
-
-      <footer>
-        <a
-          href="https://nickwforsberg.com"
-          target="_blank"
-          rel="noopener noreferrer"
+    <VStack spacing={10} minH="100vh">
+      <Heading as="h2" size="xl">
+        <Text
+          // bgGradient="linear(to-l, #7928CA, #FF0080)"
+          bgClip="text"
+          fontSize="6xl"
+          fontWeight="extrabold"
+          className={styles.heading}
         >
-          Nick W Forsberg
-        </a>
-      </footer>
-    </Box>
+          Always be billing 💸
+        </Text>
+      </Heading>
+      <Billing currencyObject={props.currencyObject} />
+      <Cards />
+    </VStack>
   );
 }
 
