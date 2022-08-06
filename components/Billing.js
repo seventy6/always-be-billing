@@ -9,6 +9,7 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  Text,
 } from "@chakra-ui/react";
 
 import { BillingContext } from "../utils/BillingContext";
@@ -83,7 +84,13 @@ function Billing(props) {
       borderRadius="md"
     >
       <GridItem p={4}>
-        <FormLabel htmlFor="Set Your Billing Rate"> Billing Rate </FormLabel>{" "}
+        <FormLabel htmlFor="Set Your Billing Rate">
+          Billing Rate <br />
+          <Text as="i" fontSize="sm">
+            {" "}
+            (hourly)
+          </Text>
+        </FormLabel>{" "}
       </GridItem>{" "}
       <GridItem p={4}>
         <FormControl>

@@ -65,7 +65,8 @@ function Cards(props) {
       ),
     });
   }
-
+  remaingMonthsData[0].remainingWorkDays = remainingWorkDays;
+  console.log("remaingMonthsData", remaingMonthsData);
   const remaingMonthsBilling = _.reduce(
     remaingMonthsData,
     function (memoizer, value) {
@@ -82,11 +83,10 @@ function Cards(props) {
           bgClip="text"
           fontWeight="extrabold"
         >
-          {endOfMonth.format("MMMM")}
-          numbers{" "}
+          {endOfMonth.format("MMMM")} numbers{" "}
         </Text>{" "}
       </Heading>{" "}
-      <Grid templateColumns="repeat(3, 1fr)" gap={6} py={4} px={14}>
+      <Grid templateColumns="repeat(3, 1fr)" gap={6} px={14}>
         <GridItem bg="gray.100" p={4} borderRadius="md">
           <Stat>
             <StatLabel> Days Remaing in {moment().format("MMMM")} </StatLabel>{" "}
@@ -127,15 +127,8 @@ function Cards(props) {
           </Stat>{" "}
         </GridItem>{" "}
       </Grid>{" "}
-      <Flex gap={6} py={8} px={14} w={["100%", 900, 900]}>
-        <Heading
-          align="center"
-          as="h1"
-          size="lg"
-          py={2}
-          px={0}
-          color="gray.600"
-        >
+      <Flex gap={0} pt={8} px={14} w={["100%", 900, 900]}>
+        <Heading align="center" as="h1" size="lg" color="gray.600">
           <Text as="span">
             If you continue to work at the same pace for the remaining{" "}
           </Text>{" "}
@@ -146,8 +139,7 @@ function Cards(props) {
           <Text as="span"> months( </Text>{" "}
           <Text as="span" color="blue.300">
             {" "}
-            {remaingMonthsBilling}
-            days{" "}
+            {remaingMonthsBilling} days{" "}
           </Text>{" "}
           <Text as="span"> ) in </Text>{" "}
           <Text as="span" color="blue.300">
@@ -177,52 +169,40 @@ function Cards(props) {
           <Text as="span"> after tax😀 </Text>{" "}
         </Heading>{" "}
       </Flex>{" "}
-      <Grid templateColumns="repeat(3, 1fr)" gap={6} p={14}>
+      <Grid templateColumns="repeat(3, 1fr)" gap={6} px={14}>
         {" "}
-        {remaingMonthsData.map((month) => (
-          <>
-            <GridItem
-              bg="pink.100"
-              p={4}
-              borderRadius="md"
-              bg="green.100"
-              key={month.month + Math.random()}
-            >
-              <Heading as="h2" size="lg">
-                {" "}
-                {month.month}{" "}
-              </Heading>{" "}
-              <Stat>
-                <StatNumber>
-                  {" "}
-                  {month.remainingWorkDays}
-                  billable days{" "}
-                </StatNumber>{" "}
-                <StatNumber>
-                  <Text fontSize="sm" as="span">
-                    After tax:
-                  </Text>{" "}
-                  {formatToCurrency(
+        {remaingMonthsData.map((month, index) => (
+          <GridItem p={4} borderRadius="md" bg="teal.100" key={index}>
+            <Heading as="h2" size="lg">
+              {" "}
+              {month.month}
+            </Heading>{" "}
+            <Stat>
+              <StatNumber> {month.remainingWorkDays} billable days </StatNumber>{" "}
+              <StatNumber>
+                <Text fontSize="sm" as="span">
+                  After tax:
+                </Text>{" "}
+                {formatToCurrency(
+                  billing.billingRate *
+                    billing.billingHoursPerDay *
+                    month.remainingWorkDays -
                     billing.billingRate *
                       billing.billingHoursPerDay *
-                      month.remainingWorkDays -
-                      billing.billingRate *
-                        billing.billingHoursPerDay *
-                        month.remainingWorkDays *
-                        billing.taxRate
-                  )}{" "}
-                </StatNumber>{" "}
-                <StatHelpText>
-                  Before Tax:{" "}
-                  {formatToCurrency(
-                    billing.billingRate *
-                      billing.billingHoursPerDay *
-                      month.remainingWorkDays
-                  )}{" "}
-                </StatHelpText>{" "}
-              </Stat>{" "}
-            </GridItem>{" "}
-          </>
+                      month.remainingWorkDays *
+                      billing.taxRate
+                )}{" "}
+              </StatNumber>{" "}
+              <StatHelpText>
+                Before Tax:{" "}
+                {formatToCurrency(
+                  billing.billingRate *
+                    billing.billingHoursPerDay *
+                    month.remainingWorkDays
+                )}{" "}
+              </StatHelpText>{" "}
+            </Stat>{" "}
+          </GridItem>
         ))}{" "}
       </Grid>{" "}
     </>
