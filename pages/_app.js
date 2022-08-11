@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { ChakraProvider, Container, Flex } from "@chakra-ui/react";
 import { BillingContext } from "../utils/BillingContext";
 import { Header } from "../components/Header";
+import Script from "next/script";
 
 function MyApp({ Component, pageProps }) {
   const [billing, setBilling] = useState({
@@ -57,6 +58,12 @@ function MyApp({ Component, pageProps }) {
             <Component {...pageProps} />{" "}
           </Flex>
         </Container>
+        <Script
+          id="gogo"
+          defer
+          data-domain="always-be-billing.netlify.app"
+          src="https://gogo-analytics.netlify.app/scripts/gogo.min.js"
+        ></Script>
       </BillingContext.Provider>{" "}
     </ChakraProvider>
   );
