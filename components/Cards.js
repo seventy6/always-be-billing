@@ -94,7 +94,7 @@ function Cards(props) {
       <SimpleGrid columns={columns} gap={6} px={1}>
         <GridItem bg="gray.100" p={4} borderRadius="md">
           <Stat>
-            <StatLabel> Days Remaing in {moment().format("MMMM")} </StatLabel>
+            <StatLabel> Days Remaining in {moment().format("MMMM")} </StatLabel>
             <StatNumber> {remainingDays} </StatNumber>
             <StatHelpText> </StatHelpText>
           </Stat>

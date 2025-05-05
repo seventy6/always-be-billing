@@ -69,9 +69,8 @@ function Billing(props) {
   const updateCurrency = (val) => {
     console.log("updateCurrency", val);
     setBilling({
-      billingHoursPerDay: val,
-      billingHoursPerDay: billing.billingHoursPerDay,
       billingRate: billing.billingRate,
+      billingHoursPerDay: billing.billingHoursPerDay,
       taxRate: billing.taxRate,
       currency: val.value,
     });
