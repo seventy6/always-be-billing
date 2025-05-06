@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   FormControl,
   FormLabel,
@@ -12,6 +12,9 @@ import {
   useBreakpointValue,
   SimpleGrid,
   GridItem,
+  Badge,
+  Flex,
+  Tooltip,
 } from "@chakra-ui/react";
 
 import { BillingContext } from "../utils/BillingContext";
@@ -34,6 +37,98 @@ function Billing(props) {
   const [selectedCurrency, setSelectedCurrency] = useState(
     getCurrencySelectorFromCode(billing.currency)
   );
+  const [exchangeRateData, setExchangeRateData] = useState({
+    loading: false,
+    error: null,
+    todayRate: null,
+    yesterdayRate: null,
+    percentChange: null,
+  });
+
+  useEffect(() => {
+    const fetchExchangeRates = async () => {
+      if (!billing.currency) return;
+      
+      setExchangeRateData(prev => ({ ...prev, loading: true, error: null }));
+      
+      if (billing.currency === 'USD') {
+        setExchangeRateData({
+          loading: false,
+          error: null,
+          todayRate: 1,
+          yesterdayRate: 1,
+          percentChange: 0,
+        });
+        return;
+      }
+      
+      try {
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        
+        const todayStr = today.toISOString().split('T')[0];
+        const yesterdayStr = yesterday.toISOString().split('T')[0];
+        
+        const todayResponse = await fetch(
+          `https://api.frankfurter.app/latest?from=USD&to=${billing.currency}`
+        );
+        
+        console.log('Today API response status:', todayResponse.status);
+        
+        if (!todayResponse.ok) {
+          throw new Error('Failed to fetch today\'s exchange rates');
+        }
+        
+        const todayData = await todayResponse.json();
+        console.log('Today API response data:', todayData);
+        
+        const yesterdayResponse = await fetch(
+          `https://api.frankfurter.app/${yesterdayStr}?from=USD&to=${billing.currency}`
+        );
+        
+        console.log('Yesterday API response status:', yesterdayResponse.status);
+        
+        if (!yesterdayResponse.ok) {
+          throw new Error('Failed to fetch yesterday\'s exchange rates');
+        }
+        
+        const yesterdayData = await yesterdayResponse.json();
+        console.log('Yesterday API response data:', yesterdayData);
+        
+        if (todayData.rates && yesterdayData.rates) {
+          const todayRate = todayData.rates[billing.currency];
+          const yesterdayRate = yesterdayData.rates[billing.currency];
+          const percentChange = ((todayRate - yesterdayRate) / yesterdayRate) * 100;
+          
+          console.log('Exchange rate data:', {
+            todayRate,
+            yesterdayRate,
+            percentChange
+          });
+          
+          setExchangeRateData({
+            loading: false,
+            error: null,
+            todayRate,
+            yesterdayRate,
+            percentChange,
+          });
+        } else {
+          throw new Error('Invalid response format');
+        }
+      } catch (error) {
+        console.error('Error fetching exchange rates:', error);
+        setExchangeRateData(prev => ({
+          ...prev,
+          loading: false,
+          error: 'Failed to fetch exchange rates',
+        }));
+      }
+    };
+    
+    fetchExchangeRates();
+  }, [billing.currency]);
 
   console.log("billing.js > ", billing, selectedCurrency);
 
@@ -161,7 +256,32 @@ function Billing(props) {
             onChange={updateCurrency}
             selectedItem={selectedCurrency}
           />
-          <FormHelperText> </FormHelperText>
+          {exchangeRateData.loading ? (
+            <FormHelperText>Loading exchange rates...</FormHelperText>
+          ) : exchangeRateData.error ? (
+            <FormHelperText color="red.500">{exchangeRateData.error}</FormHelperText>
+          ) : exchangeRateData.percentChange !== null ? (
+            <FormHelperText>
+              <Flex alignItems="center" mt={1}>
+                <Text mr={2}>Exchange rate:</Text>
+                <Tooltip 
+                  label={`Yesterday: ${exchangeRateData.yesterdayRate?.toFixed(4)}, Today: ${exchangeRateData.todayRate?.toFixed(4)}`}
+                  placement="top"
+                >
+                  <Badge 
+                    colorScheme={exchangeRateData.percentChange > 0 ? "green" : exchangeRateData.percentChange < 0 ? "red" : "gray"}
+                    display="flex"
+                    alignItems="center"
+                  >
+                    {exchangeRateData.percentChange > 0 ? "↑" : exchangeRateData.percentChange < 0 ? "↓" : "–"}
+                    {Math.abs(exchangeRateData.percentChange).toFixed(2)}% from yesterday
+                  </Badge>
+                </Tooltip>
+              </Flex>
+            </FormHelperText>
+          ) : (
+            <FormHelperText> </FormHelperText>
+          )}
         </FormControl>
       </GridItem>
     </SimpleGrid>
