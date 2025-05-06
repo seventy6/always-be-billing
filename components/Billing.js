@@ -1,19 +1,4 @@
 import React, { useContext, useState } from "react";
-import {
-  FormControl,
-  FormLabel,
-  FormHelperText,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  Text,
-  useBreakpointValue,
-  SimpleGrid,
-  GridItem,
-} from "@chakra-ui/react";
-
 import { BillingContext } from "../utils/BillingContext";
 import {
   formatToCurrency,
@@ -28,8 +13,11 @@ import {
   getCurrencyFromCode,
 } from "../data/currencies";
 
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+
 function Billing(props) {
-  const columns = useBreakpointValue({ base: 1, md: 2 });
   const [billing, setBilling] = useContext(BillingContext);
   const [selectedCurrency, setSelectedCurrency] = useState(
     getCurrencySelectorFromCode(billing.currency)
@@ -38,23 +26,27 @@ function Billing(props) {
   console.log("billing.js > ", billing, selectedCurrency);
 
   const updateRate = (val) => {
+    const numericValue = parseCurrencyToNumber(val);
     setBilling({
-      billingRate: parseCurrencyToNumber(val),
+      billingRate: numericValue,
       billingHoursPerDay: billing.billingHoursPerDay,
       currency: billing.currency,
       taxRate: billing.taxRate,
     });
-    localStorage.setItem("billingRate", parseCurrencyToNumber(val));
+    localStorage.setItem("billingRate", numericValue);
   };
+  
   const updateHours = (val) => {
+    const numericValue = parseFloat(val);
     setBilling({
-      billingHoursPerDay: val,
+      billingHoursPerDay: numericValue,
       billingRate: billing.billingRate,
       currency: billing.currency,
       taxRate: billing.taxRate,
     });
-    localStorage.setItem("billingHoursPerDay", parseCurrencyToNumber(val));
+    localStorage.setItem("billingHoursPerDay", numericValue);
   };
+  
   const updateTax = (val) => {
     const newVal = parsePercentToNumber(val) / 100;
     console.log(val, newVal);
@@ -66,6 +58,7 @@ function Billing(props) {
     });
     localStorage.setItem("taxRate", newVal);
   };
+  
   const updateCurrency = (val) => {
     console.log("updateCurrency", val);
     setBilling({
@@ -77,94 +70,88 @@ function Billing(props) {
     localStorage.setItem("currency", val.value);
     setSelectedCurrency(getCurrencySelectorFromCode(val.value));
   };
-  //const formatToCurrency = (val) => `$` + val
 
   return (
-    <SimpleGrid columns={columns} gap={6} px={1}>
-      <GridItem p={4}>
-        <FormLabel htmlFor="Set Your Billing Rate">
-          Billing Rate <br />
-          <Text as="i" fontSize="sm">
-            {" "}
-            (hourly)
-          </Text>
-        </FormLabel>{" "}
-      </GridItem>{" "}
-      <GridItem p={4}>
-        <FormControl>
-          <NumberInput
-            value={formatToCurrency(
-              billing.billingRate,
-              getCurrencyFromCode(billing.currency)
-            )}
-            precision={0}
-            step={5.0}
-            onChange={(valueString) => updateRate(valueString)}
-          >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <FormHelperText></FormHelperText>
-        </FormControl>
-      </GridItem>
-      <GridItem px={4}>
-        <FormLabel htmlFor="Hours per Day"> Hours Per Day </FormLabel>
-      </GridItem>
-      <GridItem px={4}>
-        <FormControl>
-          <NumberInput
-            value={billing.billingHoursPerDay}
-            precision={1}
-            step={1}
-            onChange={(valueString) => updateHours(valueString)}
-          >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <FormHelperText> </FormHelperText>
-        </FormControl>
-      </GridItem>
-      <GridItem p={4}>
-        <FormLabel htmlFor="Set Your Tax Rate"> Tax Rate </FormLabel>
-      </GridItem>
-      <GridItem px={4}>
-        <FormControl>
-          <NumberInput
-            value={formatToPercent(billing.taxRate)}
-            precision={1}
-            onChange={(valueString) => updateTax(valueString)}
-            max={100}
-            min={1}
-          >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <FormHelperText> </FormHelperText>
-        </FormControl>
-      </GridItem>
-      <GridItem p={4}>
-        <FormLabel htmlFor="Set Your Tax Rate"> Currency </FormLabel>
-      </GridItem>
-      <GridItem px={4}>
-        <FormControl>
-          <CurrencySelector
-            currencyObject={props.currencyObject}
-            onChange={updateCurrency}
-            selectedItem={selectedCurrency}
-          />
-          <FormHelperText> </FormHelperText>
-        </FormControl>
-      </GridItem>
-    </SimpleGrid>
+    <Card className="w-full">
+      <CardContent className="pt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
+          <div className="p-4">
+            <label htmlFor="billingRate" className="text-sm font-medium">
+              Billing Rate <br />
+              <span className="italic text-sm text-muted-foreground">
+                (hourly)
+              </span>
+            </label>
+          </div>
+          <div className="p-4">
+            <div className="space-y-2">
+              <Input
+                id="billingRate"
+                type="text"
+                value={formatToCurrency(
+                  billing.billingRate,
+                  getCurrencyFromCode(billing.currency)
+                )}
+                onChange={(e) => updateRate(e.target.value)}
+                className="w-full"
+              />
+            </div>
+          </div>
+          
+          <div className="p-4">
+            <label htmlFor="hoursPerDay" className="text-sm font-medium">
+              Hours Per Day
+            </label>
+          </div>
+          <div className="p-4">
+            <div className="space-y-2">
+              <Input
+                id="hoursPerDay"
+                type="number"
+                value={billing.billingHoursPerDay}
+                onChange={(e) => updateHours(e.target.value)}
+                step="0.5"
+                min="0.5"
+                max="24"
+                className="w-full"
+              />
+            </div>
+          </div>
+          
+          <div className="p-4">
+            <label htmlFor="taxRate" className="text-sm font-medium">
+              Tax Rate
+            </label>
+          </div>
+          <div className="p-4">
+            <div className="space-y-2">
+              <Input
+                id="taxRate"
+                type="text"
+                value={formatToPercent(billing.taxRate)}
+                onChange={(e) => updateTax(e.target.value)}
+                className="w-full"
+              />
+            </div>
+          </div>
+          
+          <div className="p-4">
+            <label htmlFor="currency" className="text-sm font-medium">
+              Currency
+            </label>
+          </div>
+          <div className="p-4">
+            <div className="space-y-2">
+              <CurrencySelector
+                currencyObject={props.currencyObject}
+                onChange={updateCurrency}
+                selectedItem={selectedCurrency}
+              />
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 

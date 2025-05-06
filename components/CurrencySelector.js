@@ -1,25 +1,34 @@
 import { useState, useEffect } from "react";
-import {
-  AsyncCreatableSelect,
-  AsyncSelect,
-  CreatableSelect,
-  Select,
-} from "chakra-react-select";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
 
 function CurrencySelector(props) {
-  //useEffect(() => {}, [props]);
-  //if (Object.keys(selectedItem).length === 0) return <></>;
   return (
     <Select
-      name="curriences"
-      options={props.currencyObject[0].options}
-      placeholder="Select a currency..."
-      closeMenuOnSelect={true}
-      isSearchable={true}
-      size="md"
-      defaultValue={props.selectedItem}
-      onChange={(valueString) => props.onChange(valueString)}
-    />
+      defaultValue={props.selectedItem?.value}
+      onValueChange={(value) => {
+        const selectedOption = props.currencyObject[0].options.find(
+          option => option.value === value
+        );
+        props.onChange(selectedOption);
+      }}
+    >
+      <SelectTrigger className="w-full">
+        <SelectValue placeholder="Select a currency..." />
+      </SelectTrigger>
+      <SelectContent>
+        {props.currencyObject[0].options.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }
 export default CurrencySelector;

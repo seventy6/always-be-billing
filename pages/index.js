@@ -5,25 +5,34 @@ import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Cards from "../components/Cards";
 import Billing from "../components/Billing";
-import { Heading, Box, Text, VStack } from "@chakra-ui/react";
+import HistoricalTracking from "../components/HistoricalTracking";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Home(props) {
   return (
-    <VStack spacing={10} minH="100vh">
-      <Heading as="h2" size="xl">
-        <Text
-          // bgGradient="linear(to-l, #7928CA, #FF0080)"
-          bgClip="text"
-          fontSize="6xl"
-          fontWeight="extrabold"
-          className={styles.heading}
+    <div className="flex flex-col items-center space-y-10 min-h-screen">
+      <h2 className="text-4xl">
+        <span
+          className={`text-6xl font-extrabold ${styles.heading}`}
         >
           Always be billing 💸
-        </Text>
-      </Heading>
+        </span>
+      </h2>
       <Billing currencyObject={props.currencyObject} />
-      <Cards />
-    </VStack>
+      
+      <Tabs defaultValue="projections" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="projections">Projections</TabsTrigger>
+          <TabsTrigger value="historical">Historical Analytics</TabsTrigger>
+        </TabsList>
+        <TabsContent value="projections">
+          <Cards />
+        </TabsContent>
+        <TabsContent value="historical">
+          <HistoricalTracking />
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }
 
