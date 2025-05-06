@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-//import "../styles/globals.css";
-import { ChakraProvider, Container, Flex } from "@chakra-ui/react";
+import "../styles/globals.css";
 import { BillingContext } from "../utils/BillingContext";
 import { Header } from "../components/Header";
 import Script from "next/script";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
 function MyApp({ Component, pageProps }) {
   const [billing, setBilling] = useState({
@@ -38,34 +38,31 @@ function MyApp({ Component, pageProps }) {
     });
     if (!storageChanged) setStorageChanged(true);
   }, [billing]);
+  
   if (!storageChanged) return <></>;
+  
   return (
-    <ChakraProvider>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="light"
+      enableSystem
+      disableTransitionOnChange
+    >
       <BillingContext.Provider value={[billing, setBilling]}>
         <Header />
-        <Container
-          minWidth={["max-width", "container.lg"]}
-          px={[2, 20]}
-          py={[2, 10]}
-          alignItems="center"
-          alignContent="center"
-        >
-          <Flex
-            minW={"100%"}
-            p={[0, 5, 10]}
-            direction={{ base: "column-reverse", md: "row" }}
-          >
-            <Component {...pageProps} />{" "}
-          </Flex>
-        </Container>
+        <div className="container mx-auto px-2 md:px-20 py-2 md:py-10 items-center content-center">
+          <div className="w-full p-0 md:p-5 lg:p-10 flex flex-col md:flex-row">
+            <Component {...pageProps} />
+          </div>
+        </div>
         <Script
           id="gogo"
           defer
           data-domain="always-be-billing.netlify.app"
           src="https://gogo-analytics.netlify.app/scripts/gogo.min.js"
         ></Script>
-      </BillingContext.Provider>{" "}
-    </ChakraProvider>
+      </BillingContext.Provider>
+    </ThemeProvider>
   );
 }
 export default MyApp;

@@ -1,25 +1,14 @@
 import React, { useContext } from "react";
-import {
-  SimpleGrid,
-  GridItem,
-  Stat,
-  StatLabel,
-  StatNumber,
-  StatHelpText,
-  Text,
-  Heading,
-  VStack,
-  useBreakpointValue,
-  Box,
-} from "@chakra-ui/react";
 import moment from "moment";
 import { BillingContext } from "../utils/BillingContext";
 import { formatToCurrency } from "../utils/helpers";
 import { getCurrencyFromCode } from "../data/currencies";
-import _, { map } from "underscore";
+import _ from "underscore";
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 function Cards(props) {
-  const columns = useBreakpointValue({ base: 1, md: 2, lg: 3 });
   const endOfMonth = moment().endOf("month");
   const today = moment();
   const remainingDays = endOfMonth.diff(today, "days");
@@ -80,37 +69,38 @@ function Cards(props) {
   );
 
   return (
-    <VStack spacing={10}>
-      <Heading as="h2" size="lg">
-        <Text
-          //bgGradient="linear(to-r, #7928CA, #FF0080)"
-          //bgClip="text"
-          color="teal.300"
-          fontWeight="extrabold"
-        >
-          {endOfMonth.format("MMMM")} numbers{" "}
-        </Text>
-      </Heading>
-      <SimpleGrid columns={columns} gap={6} px={1}>
-        <GridItem bg="gray.100" p={4} borderRadius="md">
-          <Stat>
-            <StatLabel> Days Remaining in {moment().format("MMMM")} </StatLabel>
-            <StatNumber> {remainingDays} </StatNumber>
-            <StatHelpText> </StatHelpText>
-          </Stat>
-        </GridItem>
-        <GridItem bg="gray.100" p={4} borderRadius="md">
-          <Stat>
-            <StatLabel> Work days in {moment().format("MMMM")} </StatLabel>
-            <StatNumber> {remainingWorkDays} </StatNumber>
-            <StatHelpText> </StatHelpText>
-          </Stat>
-        </GridItem>
-        <GridItem bg="teal.100" p={4} borderRadius="md">
-          <Stat>
-            <StatLabel> After tax </StatLabel>
-            <StatNumber>
-              {" "}
+    <div className="flex flex-col space-y-10">
+      <h2 className="text-2xl font-bold">
+        <span className="text-primary font-extrabold">
+          {endOfMonth.format("MMMM")} numbers
+        </span>
+      </h2>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-1">
+        <Card>
+          <CardHeader>
+            <CardTitle>Days Remaining in {moment().format("MMMM")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold">{remainingDays}</p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Work days in {moment().format("MMMM")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold">{remainingWorkDays}</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-primary/10">
+          <CardHeader>
+            <CardTitle>After tax</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold">
               {formatToCurrency(
                 billing.billingRate *
                   billing.billingHoursPerDay *
@@ -120,101 +110,95 @@ function Cards(props) {
                     remainingWorkDays *
                     billing.taxRate,
                 getCurrencyFromCode(billing.currency)
-              )}{" "}
-            </StatNumber>
-            <StatHelpText>
+              )}
+            </p>
+            <p className="text-sm text-muted-foreground mt-2">
               Before Tax:{" "}
               {formatToCurrency(
                 billing.billingRate *
                   billing.billingHoursPerDay *
                   remainingWorkDays,
                 getCurrencyFromCode(billing.currency)
-              )}{" "}
-            </StatHelpText>
-          </Stat>
-        </GridItem>
-      </SimpleGrid>
-      <Box maxW="34rem">
-        <Heading align="center" as="h1" size="md" color="gray.600">
-          <Text as="span">
-            If you continue to work at the same pace for the remaining{" "}
-          </Text>
-          <Text as="span" color="blue.300">
-            {" "}
-            {monthsRemaining}{" "}
-          </Text>{" "}
-          <Text as="span"> months / </Text>
-          <Text as="span" color="blue.300">
-            {remaingMonthsBilling}
-          </Text>
-          <Text as="span"> days in </Text>
-          <Text as="span" color="blue.300">
-            {" "}
-            {moment().format("YYYY")}{" "}
-          </Text>
-          <Text as="span">
-            {" "}
-            , <br /> you have the potential to earn{" "}
-          </Text>
-          <Text
-            as="span"
-            bgGradient="linear(to-r, #7928CA, #FF0080)"
-            bgClip="text"
-            fontWeight="extrabold"
-          >
-            {formatToCurrency(
-              remaingMonthsBilling *
-                billing.billingHoursPerDay *
-                billing.billingRate -
+              )}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+      
+      <Card className="max-w-3xl mx-auto">
+        <CardContent className="pt-6">
+          <h3 className="text-center text-lg text-muted-foreground">
+            <span>
+              If you continue to work at the same pace for the remaining{" "}
+            </span>
+            <span className="text-blue-500">
+              {monthsRemaining}
+            </span>
+            <span> months / </span>
+            <span className="text-blue-500">
+              {remaingMonthsBilling}
+            </span>
+            <span> days in </span>
+            <span className="text-blue-500">
+              {moment().format("YYYY")}
+            </span>
+            <span>
+              , <br /> you have the potential to earn{" "}
+            </span>
+            <span className="bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text font-extrabold">
+              {formatToCurrency(
                 remaingMonthsBilling *
                   billing.billingHoursPerDay *
-                  billing.billingRate *
-                  billing.taxRate,
-              getCurrencyFromCode(billing.currency)
-            )}
-          </Text>
-          <Text as="span"> after tax😀 </Text>
-        </Heading>
-      </Box>
-      <SimpleGrid columns={columns} gap={6} px={1} pb={10}>
-        {" "}
-        {remaingMonthsData.map((month, index) => (
-          <GridItem p={4} borderRadius="md" bg="gray.100" key={index}>
-            <Heading as="h2" size="lg">
-              {" "}
-              {month.month}
-            </Heading>
-            <Stat>
-              <StatNumber> {month.remainingWorkDays} billable days </StatNumber>
-              <StatNumber>
-                <Text fontSize="sm" as="span">
-                  After tax:
-                </Text>
-                {formatToCurrency(
-                  billing.billingRate *
+                  billing.billingRate -
+                  remaingMonthsBilling *
                     billing.billingHoursPerDay *
-                    month.remainingWorkDays -
+                    billing.billingRate *
+                    billing.taxRate,
+                getCurrencyFromCode(billing.currency)
+              )}
+            </span>
+            <span> after tax😀 </span>
+          </h3>
+        </CardContent>
+      </Card>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-1 pb-10">
+        {remaingMonthsData.map((month, index) => (
+          <Card key={index}>
+            <CardHeader>
+              <CardTitle>{month.month}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-xl font-bold">{month.remainingWorkDays} billable days</p>
+              <div className="mt-2">
+                <p className="text-sm text-muted-foreground">After tax:</p>
+                <p className="text-xl font-bold">
+                  {formatToCurrency(
                     billing.billingRate *
                       billing.billingHoursPerDay *
-                      month.remainingWorkDays *
-                      billing.taxRate,
-                  getCurrencyFromCode(billing.currency)
-                )}{" "}
-              </StatNumber>
-              <StatHelpText>
-                Before Tax:{" "}
-                {formatToCurrency(
-                  billing.billingRate *
-                    billing.billingHoursPerDay *
-                    month.remainingWorkDays,
-                  getCurrencyFromCode(billing.currency)
-                )}{" "}
-              </StatHelpText>
-            </Stat>
-          </GridItem>
-        ))}{" "}
-      </SimpleGrid>
-    </VStack>
+                      month.remainingWorkDays -
+                      billing.billingRate *
+                        billing.billingHoursPerDay *
+                        month.remainingWorkDays *
+                        billing.taxRate,
+                    getCurrencyFromCode(billing.currency)
+                  )}
+                </p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Before Tax:{" "}
+                  {formatToCurrency(
+                    billing.billingRate *
+                      billing.billingHoursPerDay *
+                      month.remainingWorkDays,
+                    getCurrencyFromCode(billing.currency)
+                  )}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
   );
 }
 
