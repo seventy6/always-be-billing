@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Hanalei+Fill&display=swap');
+
 html,
 body {
-  background-color: pink;
+  background-color: #FF69B4; /* Hot pink */
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,

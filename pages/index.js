@@ -17,6 +17,7 @@ export default function Home(props) {
           fontSize="6xl"
           fontWeight="extrabold"
           className={styles.heading}
+          fontFamily="'Hanalei Fill', cursive"
         >
           Always be billing 💸
         </Text>

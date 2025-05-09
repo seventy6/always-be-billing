@@ -87,6 +87,7 @@ function Cards(props) {
           //bgClip="text"
           color="teal.300"
           fontWeight="extrabold"
+          fontFamily="'Hanalei Fill', cursive"
         >
           {endOfMonth.format("MMMM")} numbers{" "}
         </Text>
@@ -135,7 +136,7 @@ function Cards(props) {
         </GridItem>
       </SimpleGrid>
       <Box maxW="34rem">
-        <Heading align="center" as="h1" size="md" color="gray.600">
+        <Heading align="center" as="h1" size="md" color="gray.600" fontFamily="'Hanalei Fill', cursive">
           <Text as="span">
             If you continue to work at the same pace for the remaining{" "}
           </Text>
@@ -180,7 +181,7 @@ function Cards(props) {
         {" "}
         {remaingMonthsData.map((month, index) => (
           <GridItem p={4} borderRadius="md" bg="gray.100" key={index}>
-            <Heading as="h2" size="lg">
+            <Heading as="h2" size="lg" fontFamily="'Hanalei Fill', cursive">
               {" "}
               {month.month}
             </Heading>
