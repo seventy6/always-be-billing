@@ -194,6 +194,7 @@ function Billing(props) {
             )}
             precision={0}
             step={5.0}
+            min={0.5}
             onChange={(valueString) => updateRate(valueString)}
           >
             <NumberInputField />
@@ -214,6 +215,7 @@ function Billing(props) {
             value={billing.billingHoursPerDay}
             precision={1}
             step={1}
+            min={0.5}
             onChange={(valueString) => updateHours(valueString)}
           >
             <NumberInputField />
@@ -235,7 +237,7 @@ function Billing(props) {
             precision={1}
             onChange={(valueString) => updateTax(valueString)}
             max={100}
-            min={1}
+            min={0.5}
           >
             <NumberInputField />
             <NumberInputStepper>
