@@ -5,6 +5,7 @@ import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Cards from "../components/Cards";
 import Billing from "../components/Billing";
+import PredictionChartContainer from "../components/PredictionChartContainer";
 import { Heading, Box, Text, VStack } from "@chakra-ui/react";
 
 export default function Home(props) {
@@ -22,6 +23,7 @@ export default function Home(props) {
         </Text>
       </Heading>
       <Billing currencyObject={props.currencyObject} />
+      <PredictionChartContainer />
       <Cards />
     </VStack>
   );
