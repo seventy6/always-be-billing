@@ -1,6 +1,10 @@
 var numeral = require("numeral");
 
-export const formatToCurrency = (val, symbol) => {
+export const formatToCurrency = (val, symbol, abbreviated = false) => {
+  if (abbreviated) {
+    // For chart axis, use abbreviated format (K for thousands, M for millions)
+    return numeral(val).format("0a") + " " + symbol;
+  }
   return numeral(val).format("0,0") + " " + symbol;
 }; //`$` + val;
 export const formatToPercent = (val) => numeral(val).format("0%"); //`$` + val;
